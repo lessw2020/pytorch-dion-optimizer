@@ -371,7 +371,7 @@ def create_dion_optimizer(
     model: nn.Module,
     lr: float = 0.01,
     rank_factor: float = 0.25,
-    scalar_optimizer: str = "lion" if LION_AVAILABLE else "adamw",
+    scalar_optimizer: str = "adamw",
     **kwargs,
 ) -> DionOptimizer:
     """
