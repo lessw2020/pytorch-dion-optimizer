@@ -49,7 +49,7 @@ class TrainingConfig:
     # Training settings
     batch_size: int = 8
     max_steps: int = 3000
-    eval_interval: int = 100
+    eval_interval: int = 10  # Reduced to get more data points
     eval_steps: int = 50
 
     # Optimizer settings
@@ -224,25 +224,57 @@ class MLP(nn.Module):
 
 
 class SyntheticDataset(Dataset):
-    """Synthetic dataset for language modeling."""
+    """Synthetic dataset for language modeling with pattern-like structure."""
 
     def __init__(self, config: TrainingConfig):
         self.config = config
         self.data_size = config.dataset_size
 
-        # Generate random sequences
-        self.data = torch.randint(
-            0, config.vocab_size, (config.dataset_size, config.max_seq_len + 1)
+        # Generate random sequences with some pattern structure
+        # We'll create sequences where each token has some correlation with nearby tokens
+        base_data = torch.randint(
+            0, config.vocab_size // 10, (config.dataset_size, config.max_seq_len // 4)
         )
+
+        # Expand the base data to create patterns
+        expanded = []
+        for i in range(base_data.size(1)):
+            # Each base token expands to 4 related tokens
+            chunk = base_data[:, i : i + 1].repeat(1, 4)
+            # Add small variations to create patterns (each position gets a different offset)
+            offsets = torch.arange(0, 4).view(1, 4).repeat(base_data.size(0), 1)
+            chunk = (chunk + offsets * (config.vocab_size // 20)) % config.vocab_size
+            expanded.append(chunk)
+
+        self.data = torch.cat(expanded, dim=1)
+
+        # Ensure we have the right sequence length
+        if self.data.size(1) < config.max_seq_len:
+            padding = torch.randint(
+                0,
+                config.vocab_size,
+                (config.dataset_size, config.max_seq_len - self.data.size(1)),
+            )
+            self.data = torch.cat([self.data, padding], dim=1)
+        else:
+            self.data = self.data[:, : config.max_seq_len]
 
     def __len__(self):
         return self.data_size
 
     def __getitem__(self, idx):
-        sequence = self.data[idx]
-        input_ids = sequence[:-1]
-        targets = sequence[1:]
-        return input_ids, targets
+        # Get the input sequence
+        input_ids = self.data[idx]
+
+        # Target is to predict the next token (shifted by 1)
+        # For the last position, we'll use a special token (-1) that will be ignored in the loss
+        target = torch.roll(input_ids, -1)
+        target[-1] = -1  # Ignore index for cross entropy
+
+        # Ensure all target indices are within valid range
+        target = torch.clamp(target, min=-1, max=self.config.vocab_size - 1)
+
+        return input_ids, target
 
 
 @dataclass
