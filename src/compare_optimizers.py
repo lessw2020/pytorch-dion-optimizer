@@ -14,7 +14,7 @@ from dion import create_dion_optimizer
 
 # Define a larger transformer model with multiple layers
 class LargeTransformer(nn.Module):
-    def __init__(self, d_model=2048, d_ff=8192, vocab_size=50000, num_layers=4):
+    def __init__(self, d_model=2048, d_ff=8192, vocab_size=50000, num_layers=16):
         super().__init__()
         self.embedding = nn.Embedding(vocab_size, d_model)
 
@@ -91,7 +91,7 @@ def reset_memory_stats():
 
 def compare_optimizers():
     # Set random seed for reproducibility
-    torch.manual_seed(42)
+    torch.manual_seed(2020)
 
     # Check if CUDA is available
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -101,10 +101,10 @@ def compare_optimizers():
     d_model = 2048
     d_ff = 8192
     vocab_size = 50000
-    num_layers = 4
+    num_layers = 32
     batch_size = 8  # Reduced batch size due to larger model
     seq_len = 64
-    num_iterations = 50  # Reduced iterations for faster comparison
+    num_iterations = 100  # Reduced iterations for faster comparison
     lr = 0.001  # Reduced learning rate for stability with larger model
     weight_decay = 0.0001
 
