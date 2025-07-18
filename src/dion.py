@@ -60,7 +60,7 @@ class DionOptimizer(Optimizer):
         params,
         lr: float = 0.01,
         momentum: float = 0.95,
-        rank_factor: float = 1.0,
+        rank_factor: float = 0.5,
         scalar_optimizer: str = "adamw",
         scalar_lr: Optional[float] = None,
         weight_decay: float = 0.01,
