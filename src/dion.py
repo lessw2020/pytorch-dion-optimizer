@@ -440,22 +440,24 @@ def get_parameter_info(model: nn.Module, matrix_threshold: int = 32) -> Dict[str
     }
 
 
+# Example model for testing
+class SimpleTransformer(nn.Module):
+    def __init__(self, d_model=512, d_ff=2048, vocab_size=50000):
+        super().__init__()
+        self.embedding = nn.Embedding(vocab_size, d_model)
+        self.wq = nn.Linear(d_model, d_model, bias=False)
+        self.wk = nn.Linear(d_model, d_model, bias=False)
+        self.wv = nn.Linear(d_model, d_model, bias=False)
+        self.wo = nn.Linear(d_model, d_model, bias=False)
+        self.ff1 = nn.Linear(d_model, d_ff, bias=False)
+        self.ff2 = nn.Linear(d_ff, d_model, bias=False)
+        self.norm1 = nn.LayerNorm(d_model)
+        self.norm2 = nn.LayerNorm(d_model)
+        self.lm_head = nn.Linear(d_model, vocab_size, bias=False)
+
+
 # Example usage and testing
 if __name__ == "__main__":
-    # Example: Create a simple transformer-like model
-    class SimpleTransformer(nn.Module):
-        def __init__(self, d_model=512, d_ff=2048, vocab_size=50000):
-            super().__init__()
-            self.embedding = nn.Embedding(vocab_size, d_model)
-            self.wq = nn.Linear(d_model, d_model, bias=False)
-            self.wk = nn.Linear(d_model, d_model, bias=False)
-            self.wv = nn.Linear(d_model, d_model, bias=False)
-            self.wo = nn.Linear(d_model, d_model, bias=False)
-            self.ff1 = nn.Linear(d_model, d_ff, bias=False)
-            self.ff2 = nn.Linear(d_ff, d_model, bias=False)
-            self.norm1 = nn.LayerNorm(d_model)
-            self.norm2 = nn.LayerNorm(d_model)
-            self.lm_head = nn.Linear(d_model, vocab_size, bias=False)
 
     # Create model and optimizer
     model = SimpleTransformer()
