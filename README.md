@@ -1,13 +1,13 @@
-Unofficial implementation in PyTorch of the DION optimizer.
+#### Unofficial implementation in PyTorch of the DION optimizer.
 
-Paper Credit! 
-Dion: Distributed Orthonormalized Updates
-Kwangjun Ahn, Byron Xu, Natalie Abreu, John Langford
+Based on the Paper:  
+#### Dion: Distributed Orthonormalized Updates
+##### Kwangjun Ahn, Byron Xu, Natalie Abreu, John Langford  
 
-https://arxiv.org/abs/2504.05295
-https://doi.org/10.48550/arXiv.2504.05295
+https://arxiv.org/abs/2504.05295  
+https://doi.org/10.48550/arXiv.2504.05295  
 
-Note that it is integrated into TorchTitan for distributed training with this PR:  
+Note that this unofficial implementatin is draft integrated into TorchTitan as an option for distributed training with this PR:  
 https://github.com/pytorch/torchtitan/pull/1417
 
 <img width="1196" height="539" alt="Screenshot 2025-07-18 at 2 14 57 PM" src="https://github.com/user-attachments/assets/e885f74a-4136-4048-9746-bda952caa611" />
