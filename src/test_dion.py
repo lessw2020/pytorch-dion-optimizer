@@ -7,7 +7,7 @@ to verify that the loss decreases properly.
 import matplotlib.pyplot as plt
 import torch
 import torch.nn as nn
-from dion import create_dion_optimizer, DionOptimizer, SimpleTransformer
+from dion_optimizer import create_dion_optimizer, DionOptimizer, SimpleTransformer
 
 
 def test_dion_optimizer():
